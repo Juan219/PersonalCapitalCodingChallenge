@@ -19,7 +19,12 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
+    [self.webView addSubview:self.activityIndicator];
     [self addSubview:self.webView];
+
+    self.activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [[self.activityIndicator.centerXAnchor constraintEqualToAnchor:self.webView.centerXAnchor] setActive:YES];
+    [[self.activityIndicator.centerYAnchor constraintEqualToAnchor:self.webView.centerYAnchor] setActive:YES];
 }
 
 -(void)layoutSubviews {

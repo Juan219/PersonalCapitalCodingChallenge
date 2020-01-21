@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PCResearchView : PCBaseView
 @property (nonatomic, strong, readonly) UICollectionView *collectionView;
-@property (nonatomic, strong, readonly) UIActivityIndicatorView *activityIndicator;
 @end
 
 NS_ASSUME_NONNULL_END

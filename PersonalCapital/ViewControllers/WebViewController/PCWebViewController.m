@@ -57,7 +57,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.webView.activityIndicator startAnimating];
     [self.webView.webView loadRequest:self.request];
 }
 
@@ -76,6 +75,17 @@
     self.navigationItem.titleView = titleLabel;
 }
 
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    [self.webView.activityIndicator startAnimating];
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [self.webView.activityIndicator stopAnimating];
+}
+
+-(void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    NSLog(@"error loading pageL: %@", error.localizedDescription);
+}
 
 
 @end
