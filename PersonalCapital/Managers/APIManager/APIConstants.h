@@ -15,4 +15,14 @@
 
 #define API_Articles @"blog/feed/"
 
+//HTTP Methods
+
+#define HTTP_METHOD_GET @"GET"
+
+//HTTP Codes
+
+#define HTTP_CODE_SUCCESS 200
+
+#define REQUEST_TIME_OUT 60
+
 #endif /* APIConstants_h */

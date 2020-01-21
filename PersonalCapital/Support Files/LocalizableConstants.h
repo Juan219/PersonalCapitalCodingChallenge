@@ -11,4 +11,6 @@
 
 #define title_research @"title.research"
 
+#define action_ok_ @"action.ok"
+
 #endif /* Constants_h */

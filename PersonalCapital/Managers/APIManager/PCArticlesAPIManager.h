@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^ArticlesResponseBlock)(NSArray <PCArticle *> * articles);
+typedef void (^ArticlesResponseBlock)(BOOL success, NSArray <PCArticle *> * articles);
 typedef void (^ImageResponseBlock)(BOOL success, UIImage *image);
 
 @protocol ArticlesAPIManager <NSObject>

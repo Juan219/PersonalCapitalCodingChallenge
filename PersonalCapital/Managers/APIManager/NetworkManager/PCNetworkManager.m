@@ -29,7 +29,7 @@
 
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
-        if (error == nil && httpResponse.statusCode == 200) {
+        if (error == nil && httpResponse.statusCode == HTTP_CODE_SUCCESS) {
             apiResponse(true, data, error);
         } else {
             apiResponse(false, data, error);

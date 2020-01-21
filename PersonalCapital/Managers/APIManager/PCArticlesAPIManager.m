@@ -23,14 +23,14 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
         NSMutableURLRequest *request = [self requestWithURLPath:API_Articles];
-        request.HTTPMethod = @"GET";
+        request.HTTPMethod = HTTP_METHOD_GET;
 
         [self performRequest:request response:^(BOOL succes, NSData * _Nullable data, NSError * _Nullable error) {
             if (succes) {
                 PCHTMLParser *parser = [[PCHTMLParser alloc] initWithNodeNames:@[article_item_node]];
                 [parser parseFromData:data completionBlock:^(BOOL success, NSMutableDictionary * _Nullable nodes) {
+                    NSMutableArray<PCArticle *> *articles = [[NSMutableArray alloc] initWithCapacity:nodes.count];
                     if (success) {
-                        NSMutableArray<PCArticle *> *articles = [[NSMutableArray alloc] initWithCapacity:nodes.count];
                         for (NSDictionary * articleInfo in nodes) {
                             @autoreleasepool {
                                 PCArticle *article = [[PCArticle alloc] initWithDetails:articleInfo];
@@ -39,10 +39,10 @@
                                 }
                             }
                         }
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            completion(articles);
-                        });
                     }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(success, articles);
+                    });
                 }];
             }
         }];
@@ -51,7 +51,7 @@
 
 - (void)getImageFromURLString:(NSString *)urlString completion:(ImageResponseBlock)block {
     NSURL *imageURL = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *imageRequest = [NSMutableURLRequest requestWithURL:imageURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    NSMutableURLRequest *imageRequest = [NSMutableURLRequest requestWithURL:imageURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:REQUEST_TIME_OUT];
     [self performRequest:imageRequest response:^(BOOL succes, NSData * _Nullable data, NSError * _Nullable error) {
         UIImage *image;
         if (succes) {

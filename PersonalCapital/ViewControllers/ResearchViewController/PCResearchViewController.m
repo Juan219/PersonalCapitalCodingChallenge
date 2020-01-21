@@ -27,6 +27,7 @@
 
 @property (nonatomic, copy) NSArray<PCArticle *> *articles;
 @property (nonatomic, strong) PCArticle * mainArticle;
+@property (nonatomic, strong) UIBarButtonItem *reloadButton;
 
 @end
 
@@ -78,11 +79,12 @@ const NSInteger headerViewHeight = 300;
     [self.researchView.collectionView registerClass:[PCHeaderCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([PCHeaderCollectionReusableView class])];
 
     //Adding Reload button
-    UIBarButtonItem *reloadButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
-    self.navigationItem.rightBarButtonItem = reloadButton;
+    self.reloadButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
+    self.navigationItem.rightBarButtonItem = self.reloadButton;
 }
 
 - (void)refresh {
+    self.reloadButton.enabled = false;
     [self.researchView.activityIndicator startAnimating];
     [self getArticles];
 }
@@ -91,14 +93,23 @@ const NSInteger headerViewHeight = 300;
 
 - (void)getArticles {
     __weak __typeof(self) weakSelf = self;
-    [self.apiManager getArticlesWithCompletionBlock:^(NSArray<PCArticle *> * _Nonnull articles) {
+    [self.apiManager getArticlesWithCompletionBlock:^(BOOL success, NSArray<PCArticle *> * _Nonnull articles) {
+
         if (weakSelf) {
-            [self.researchView.activityIndicator stopAnimating];
-            NSMutableArray *lArticles = [articles mutableCopy];
-            weakSelf.mainArticle = [lArticles firstObject];
-            [lArticles removeObjectAtIndex:0];
-            weakSelf.articles = lArticles;
-            [weakSelf.researchView.collectionView reloadData];
+            weakSelf.reloadButton.enabled = true;
+            [weakSelf.researchView.activityIndicator stopAnimating];
+            if (success) {
+                NSMutableArray *lArticles = [articles mutableCopy];
+                weakSelf.mainArticle = [lArticles firstObject];
+                [lArticles removeObjectAtIndex:0];
+                weakSelf.articles = lArticles;
+                [weakSelf.researchView.collectionView reloadData];
+            } else {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:weakSelf.title message:@"Unable to load articles" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(action_ok_, @"") style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:okAction];
+                [weakSelf presentViewController:alertController animated:YES completion:nil];
+            }
         }
     }];
 }
