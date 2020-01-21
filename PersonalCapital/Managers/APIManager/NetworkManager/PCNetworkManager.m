@@ -13,13 +13,14 @@
 
 @implementation PCNetworkManager
 
-- (NSMutableURLRequest *)requestWithURLPath:(NSString*)path {
+- (NSURLRequest *)GETRequestWithURLPath:(NSString*)path {
     NSURL *url = [NSURL URLWithString:baseURL];
     url = [url URLByAppendingPathComponent:path];
 
     NSMutableURLRequest *iRequest = [NSMutableURLRequest requestWithURL:url];
+    iRequest.HTTPMethod = HTTP_METHOD_GET;
 
-    return iRequest;
+    return [iRequest copy];
 }
 
 -(void)performRequest:(NSURLRequest *)request response:(APIResponseBlock)apiResponse {

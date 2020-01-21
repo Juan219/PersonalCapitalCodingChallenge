@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PCWebView : PCBaseView
-@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong, readonly) WKWebView *webView;
 @end
 
 NS_ASSUME_NONNULL_END

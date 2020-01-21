@@ -17,7 +17,7 @@ typedef void (^APIResponseBlock)(BOOL succes, NSData * _Nullable data, NSError *
 - (void)performRequest:(NSURLRequest *)request response:(APIResponseBlock)response;
 
 ///Returns a URLRequest using base URL and appending the path.
-- (NSMutableURLRequest *)requestWithURLPath:(NSString*)path;
+- (NSMutableURLRequest *)GETRequestWithURLPath:(NSString*)path;
 
 @end
 

@@ -22,8 +22,7 @@
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
-        NSMutableURLRequest *request = [self requestWithURLPath:API_Articles];
-        request.HTTPMethod = HTTP_METHOD_GET;
+        NSURLRequest *request = [self GETRequestWithURLPath:API_Articles];
 
         [self performRequest:request response:^(BOOL succes, NSData * _Nullable data, NSError * _Nullable error) {
             if (succes) {
@@ -41,7 +40,7 @@
                         }
                     }
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(success, articles);
+                        completion(success, [articles copy]);
                     });
                 }];
             }
@@ -49,9 +48,9 @@
     });
 }
 
-- (void)getImageFromURLString:(NSString *)urlString completion:(ImageResponseBlock)block {
+- (void)getImageFromURLString:(NSString *)urlString andUUID:(NSUUID *)uuid completion:(ImageResponseBlock)block {
     NSURL *imageURL = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *imageRequest = [NSMutableURLRequest requestWithURL:imageURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:REQUEST_TIME_OUT];
+    NSURLRequest *imageRequest = [NSURLRequest requestWithURL:imageURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:REQUEST_TIME_OUT];
     [self performRequest:imageRequest response:^(BOOL succes, NSData * _Nullable data, NSError * _Nullable error) {
         UIImage *image;
         if (succes) {
@@ -59,7 +58,7 @@
                 image = [UIImage imageWithData:data];
             }
         }
-        block(succes, image);
+        block(succes, image, uuid);
     }];
 }
 

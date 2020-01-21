@@ -21,7 +21,7 @@
 
 @implementation PCWebViewController
 
-#pragma mark - Lazy load.
+#pragma mark - Getter methods.
 
 -(PCWebView *)webView {
     return (PCWebView *)self.view;

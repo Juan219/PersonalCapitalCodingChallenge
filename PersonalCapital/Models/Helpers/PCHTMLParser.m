@@ -11,18 +11,18 @@
 
 @interface PCHTMLParser() <NSXMLParserDelegate>
 
-@property (nonatomic, strong) NSArray *nodeNames;
+@property (nonatomic, copy) NSArray *nodeNames;
 
 @property (nonatomic, strong) NSXMLParser *xmlParser;
 
-@property (nonatomic, strong) NSMutableArray *nodes;
+@property (nonatomic, copy) NSMutableArray *nodes;
 
 @property (nonatomic, strong) NSMutableDictionary *node;
 @property (nonatomic, strong) NSMutableArray *propertyNode;
 @property (nonatomic, strong) NSDictionary *attributes;
 
-@property (nonatomic, strong) NSString *nodeKey;
-@property (nonatomic, strong) NSString *nodeValue;
+@property (nonatomic, copy) NSString *nodeKey;
+@property (nonatomic, copy) NSString *nodeValue;
 
 @property (nonatomic, strong) HTMLParserCompletionBlock completionBlock;
 
@@ -78,14 +78,14 @@
         NSMutableDictionary *iProperty = [NSMutableDictionary new];
 
         if (self.nodeValue != nil) {
-            [iProperty setValue:self.nodeValue forKey:node_value];
+            [iProperty setObject:self.nodeValue forKey:node_value];
         }
 
         if (self.attributes != nil) {
-            [iProperty setValue:self.attributes forKey:node_attributes];
+            [iProperty setObject:self.attributes forKey:node_attributes];
         }
 
-        [self.node setValue:iProperty forKey:self.nodeKey];
+        [self.node setObject:iProperty forKey:self.nodeKey];
     }
 }
 

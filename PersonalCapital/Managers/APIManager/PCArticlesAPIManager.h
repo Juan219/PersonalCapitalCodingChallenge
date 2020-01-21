@@ -12,12 +12,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^ArticlesResponseBlock)(BOOL success, NSArray <PCArticle *> * articles);
-typedef void (^ImageResponseBlock)(BOOL success, UIImage *image);
+typedef void (^ImageResponseBlock)(BOOL success, UIImage *image, NSUUID *uuid);
 
 @protocol ArticlesAPIManager <NSObject>
 
 - (void)getArticlesWithCompletionBlock:(ArticlesResponseBlock)completion;
-- (void)getImageFromURLString:(NSString *)urlString completion:(ImageResponseBlock)block;
+- (void)getImageFromURLString:(NSString *)urlString andUUID:(NSUUID *)uuid completion:(ImageResponseBlock)block;
 
 @end
 

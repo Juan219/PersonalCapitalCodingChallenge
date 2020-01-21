@@ -12,12 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PCArticle : PCBaseObject
 
-@property (nonatomic, strong, readonly) NSString *title;
-@property (nonatomic, strong, readonly) NSString *imageURL;
-@property (nonatomic, strong, readonly) NSString *desc;
-@property (nonatomic, strong, readonly) NSString *publishDate;
-@property (nonatomic, strong, readonly) NSString *linkURL;
-@property (nonatomic, strong, readonly) NSURL *mobileLinkURL;
+@property (nonatomic, copy, readonly) NSString *title;
+@property (nonatomic, copy, readonly) NSString *imageURL;
+@property (nonatomic, copy, readonly) NSString *desc;
+@property (nonatomic, copy, readonly) NSString *publishDate;
+@property (nonatomic, copy, readonly) NSString *linkURL;
+@property (nonatomic, copy, readonly) NSURL *mobileLinkURL;
 
 - (instancetype)initWithDetails:(NSDictionary *)details;
 

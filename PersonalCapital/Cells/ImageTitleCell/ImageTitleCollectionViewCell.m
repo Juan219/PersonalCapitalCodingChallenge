@@ -50,22 +50,9 @@ static const CGFloat imagePercentage = 0.75;
     return _activityIndicator;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self loadView];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self loadView];
-    }
-    return self;
+-(void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    [self loadView];
 }
 
 - (void)loadView {
@@ -122,15 +109,19 @@ static const CGFloat imagePercentage = 0.75;
 - (void)updateImageForArticle:(PCArticle *)article {
     [self.activityIndicator startAnimating];
     if (article.imageURL != nil) {
+        id iDelegate = self.delegate;
         __weak typeof(self) weakSelf = self;
-        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(imageFromURL:withID:completion:)]) {
-            [self.delegate imageFromURL:article.imageURL withID:article.uuid completion:^(UIImage * _Nullable image) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakSelf) {
-                        weakSelf.articleImage.image = image;
-                        [weakSelf.activityIndicator stopAnimating];
-                    }
-                });
+        if (iDelegate != nil && [iDelegate respondsToSelector:@selector(imageFromURL:withID:completion:)]) {
+            [iDelegate imageFromURL:article.imageURL withID:article.uuid completion:^(UIImage * _Nullable image, NSUUID * _Nonnull uuid) {
+                if (weakSelf && weakSelf.article.uuid == uuid) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (weakSelf) {
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            strongSelf.articleImage.image = image;
+                            [strongSelf.activityIndicator stopAnimating];
+                        }
+                    });
+                }
             }];
         } else {
             [self.activityIndicator stopAnimating];

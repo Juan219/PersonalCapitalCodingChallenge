@@ -10,7 +10,7 @@
 #define Protocols_h
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void (^ImageBlock)(UIImage * _Nullable image);
+typedef void (^ImageBlock)(UIImage * _Nullable image, NSUUID * uuid);
 
 @protocol URLImageLoader <NSObject>
 

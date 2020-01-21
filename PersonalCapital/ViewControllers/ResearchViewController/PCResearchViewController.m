@@ -35,7 +35,7 @@ const NSInteger headerViewHeight = 300;
 
 @implementation PCResearchViewController
 
-#pragma mark - Lazy load.
+#pragma mark - Getter methods
 
 - (PCResearchView *)researchView {
     return (PCResearchView *)self.view;
@@ -152,17 +152,22 @@ const NSInteger headerViewHeight = 300;
 #pragma mark - URLImageLoader delegate method
 
 - (void)imageFromURL:(NSString *)stringURL withID:(NSUUID *)uuid completion:(ImageBlock)block {
-    [self.apiManager getImageFromURLString:stringURL completion:^(BOOL success, UIImage * _Nonnull image) {
-        block(image);
+    [self.apiManager getImageFromURLString:stringURL andUUID:uuid completion:^(BOOL success, UIImage * _Nonnull image, NSUUID * _Nonnull uuid) {
+        block(image, uuid);
     }];
 }
 
 #pragma mark - Helper methods
 
 - (void)openWebViewForArticle:(PCArticle *)article {
-    if (article.mobileLinkURL != nil) {
+    if (article.mobileLinkURL != nil ) {
         PCWebViewController *webViewVC = [[PCWebViewController alloc] initWithTitle:article.title andURL:article.mobileLinkURL];
         [self.navigationController pushViewController:webViewVC animated:true];
+    } else {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:self.title message:@"Link is not valid" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(action_ok_, @"") style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:okAction];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 

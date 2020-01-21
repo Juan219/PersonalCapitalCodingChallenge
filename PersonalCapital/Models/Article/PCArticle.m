@@ -7,6 +7,7 @@
 //
 
 #import "PCArticle.h"
+
 #define sValue              @"value"
 #define sAttributes         @"attributes"
 #define sPersonalCapital    @"PersonalCapital"
@@ -20,11 +21,11 @@
 
 @interface PCArticle()
 
-@property (nonatomic, strong, readwrite) NSString *title;
-@property (nonatomic, strong, readwrite) NSString *imageURL;
-@property (nonatomic, strong, readwrite) NSString *desc;
-@property (nonatomic, strong, readwrite) NSString *publishDate;
-@property (nonatomic, strong, readwrite) NSString *linkURL;
+@property (nonatomic, copy, readwrite) NSString *title;
+@property (nonatomic, copy, readwrite) NSString *imageURL;
+@property (nonatomic, copy, readwrite) NSString *desc;
+@property (nonatomic, copy, readwrite) NSString *publishDate;
+@property (nonatomic, copy, readwrite) NSString *linkURL;
 
 @end
 
@@ -43,11 +44,12 @@ static NSString * const urlComponentForMobile = @"?displayMobileNavigation=0";
 }
 
 - (void)loadDetails:(NSDictionary *)details {
-    self.title          = [[details valueForKey:sArticleTitle] valueForKey:sValue];
-    self.imageURL       = [[[details valueForKey:sArticleMedia] valueForKey:sAttributes] valueForKey:sArticleMediaURL];
-    self.desc           = [[details valueForKey:sArticleDesc] valueForKey:sValue];
-    self.publishDate    = [[details valueForKey:sArticlePublishDate] valueForKey:sValue];
-    self.linkURL        = [[details valueForKey:sArticleLink] valueForKey:sValue];
+
+    self.title          = [[details objectForKey:sArticleTitle] objectForKey:sValue];
+    self.imageURL       = [[[details objectForKey:sArticleMedia] objectForKey:sAttributes] objectForKey:sArticleMediaURL];
+    self.desc           = [[details objectForKey:sArticleDesc] objectForKey:sValue];
+    self.publishDate    = [[details objectForKey:sArticlePublishDate] objectForKey:sValue];
+    self.linkURL        = [[details objectForKey:sArticleLink] objectForKey:sValue];
 }
 
 - (NSURL *)mobileLinkURL {

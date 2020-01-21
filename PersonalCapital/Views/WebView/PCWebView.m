@@ -8,6 +8,10 @@
 
 #import "PCWebView.h"
 
+@interface PCWebView ()
+@property (nonatomic, strong, readwrite) WKWebView *webView;
+@end
+
 @implementation PCWebView
 
 -(WKWebView *)webView {

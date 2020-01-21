@@ -65,15 +65,6 @@ static const CGFloat bottomMargin = 8;
 
 #pragma mark - Init methods
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        //[self loadView];
-    }
-    return self;
-}
-
 - (void)loadView {
     self.backgroundColor = [UIColor whiteColor];
 
@@ -124,6 +115,11 @@ static const CGFloat bottomMargin = 8;
     }
 }
 
+-(void)prepareForReuse {
+    [super prepareForReuse];
+    [self cleanUI];
+}
+
 - (BOOL)loadArticle:(PCArticle *)article {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self cleanUI];
@@ -146,17 +142,20 @@ static const CGFloat bottomMargin = 8;
     if (article.imageURL != nil) {
         [self.activityIndicator startAnimating];
         __weak typeof(self) weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            [self.delegate imageFromURL:article.imageURL withID:article.uuid completion:^(UIImage * _Nullable image) {
-                if (weakSelf) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSelf.articleImage.image = image;
-                        [weakSelf.activityIndicator stopAnimating];
-                    });
-                }
-            }];
-        });
-
+        id iDelegate = self.delegate;
+        if (iDelegate && [iDelegate respondsToSelector:@selector(imageFromURL:withID:completion:)]) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                [iDelegate imageFromURL:article.imageURL withID:article.uuid completion:^(UIImage * _Nullable image, NSUUID * _Nonnull uuid) {
+                    if (weakSelf && weakSelf.article.uuid == uuid) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            strongSelf.articleImage.image = image;
+                            [strongSelf.activityIndicator stopAnimating];
+                        });
+                    }
+                }];
+            });
+        }
     }
 }
 
